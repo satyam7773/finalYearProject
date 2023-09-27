@@ -37,18 +37,18 @@ router.post("/api/register", (req, res) => {
 });
 
 //delete user
-// router.delete("/api/deleteUser/:id", (req, res) => {
-//   Register.findByIdAndRemove(req.params.id, (err, data) => {
-//     if (!err) {
-//       // res.send(data);
-//       res
-//         .status(200)
-//         .json({ code: 200, message: "User deleted", deleteUser: data });
-//     } else {
-//       console.log(err);
-//     }
-//   });
-// });
+router.delete("/api/deleteUser/:id", (req, res) => {
+  Register.findByIdAndRemove(req.params.id, (err, data) => {
+    if (!err) {
+      // res.send(data);
+      res
+        .status(200)
+        .json({ code: 200, message: "User deleted", deleteUser: data });
+    } else {
+      console.log(err);
+    }
+  });
+});
 
 //update user details
 // router.post("/api/updateUser/:id/:name/:email/:mobile", (req, res) => {
@@ -85,7 +85,7 @@ router.post("/api/register", (req, res) => {
 
 // Get Single user
 
-router.get("/api/user/:email/pass/:password", (req, res) => {
+router.get("/api/user/:email/pass/:password", async(req, res) => {
   console.log("================================================");
   console.log("================================================");
   console.log("================================================");
@@ -94,24 +94,44 @@ router.get("/api/user/:email/pass/:password", (req, res) => {
   console.log("================================================");
   console.log("================================================");
 
-  Register.findOne(
-    { email: req.params.email, password: req.params.password },
-    (err, data) => {
-      if (!err) {
-        res.send(data);
-      } else {
-        console.log(err);
-      }
-    }
-  );
+  try {
+    const allData = await Register.findOne(
+      { email: req.params.email, password: req.params.password });
+    res.send(allData);
+  } catch (error) {
+    res.status(500).send({ error });
+  }
+  
 });
+
+router.post("/api/login", async (req, res) => {
+  // const login = new Register.find(request.body);
+  console.log('request',req.body)
+  try {
+    const allData = await Register.findOne(req.body);
+    console.log('allData',allData)
+    if(allData){
+      res.send(allData);
+    }else{
+      res.send({msg:'No Record Found !!!'})
+    }
+  } catch (error) {
+    res.status(500).send({ error });
+  }
+});
+
 
 //get all user
 router.get("/api/users", async (req, res) => {
   console.log("================================================");
   try {
     const allData = await Register.find({});
-    res.send(allData);
+    console.log('allData',allData)
+    if(allData){
+      res.send(allData);
+    }else{
+      res.send({msg:'No Record Found !!!'})
+    }
   } catch (error) {
     res.status(500).send({ error });
   }
