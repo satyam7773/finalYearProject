@@ -107,22 +107,14 @@ router.get("/api/user/:email/pass/:password", (req, res) => {
 });
 
 //get all user
-router.get("/api/users", (req, res) => {
+router.get("/api/users", async (req, res) => {
   console.log("================================================");
-  console.log("================================================");
-  console.log("================================================");
-  // console.log("request =======body ",req.params.email)
-  console.log("================================================");
-  console.log("================================================");
-  console.log("================================================");
-
-  Register.find({}, (err, data) => {
-    if (!err) {
-      res.send(data);
-    } else {
-      console.log(err);
-    }
-  });
+  try {
+    const allData = await Register.find({});
+    res.send(allData);
+  } catch (error) {
+    res.status(500).send({ error });
+  }
 });
 
 ///////////////////////////////////////////////////////////////// smtp code
@@ -159,8 +151,6 @@ router.get("/api/sendEmail", (req, res) => {
 
     smtpProtocol.close();
   });
-
-
 });
 
 ///////////////////////////////////////////////////////////////// smtp code

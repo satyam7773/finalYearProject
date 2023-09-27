@@ -4,14 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 let port = process.env.PORT || 3000;
 
-// Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env
-
-// MONGO_URI =mongodb+srv://ramya1998:satyamramya@cluster0.1hwsh.mongodb.net/test
-
-// const app = express();
-// const app = express();
 const app = express();
-// const app = express();
 app.use(express.json());
 app.use(bodyParser.json({limit: '100mb', type: 'application/json'}));
 app.use(bodyParser.urlencoded({limit: '50mb',parameterLimit: 100000,extended: true}));
