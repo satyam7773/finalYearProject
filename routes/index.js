@@ -37,51 +37,51 @@ router.post("/api/register", (req, res) => {
 });
 
 //delete user
-router.delete("/api/deleteUser/:id", (req, res) => {
-  Register.findByIdAndRemove(req.params.id, (err, data) => {
-    if (!err) {
-      // res.send(data);
-      res
-        .status(200)
-        .json({ code: 200, message: "User deleted", deleteUser: data });
-    } else {
-      console.log(err);
-    }
-  });
-});
+// router.delete("/api/deleteUser/:id", (req, res) => {
+//   Register.findByIdAndRemove(req.params.id, (err, data) => {
+//     if (!err) {
+//       // res.send(data);
+//       res
+//         .status(200)
+//         .json({ code: 200, message: "User deleted", deleteUser: data });
+//     } else {
+//       console.log(err);
+//     }
+//   });
+// });
 
 //update user details
-router.post("/api/updateUser/:id/:name/:email/:mobile", (req, res) => {
-  console.log("================================================");
-  console.log("================================================");
-  console.log("================================================");
-  console.log("request =======body ", req.params.name);
-  console.log("================================================");
-  console.log("================================================");
-  console.log("================================================");
+// router.post("/api/updateUser/:id/:name/:email/:mobile", (req, res) => {
+//   console.log("================================================");
+//   console.log("================================================");
+//   console.log("================================================");
+//   console.log("request =======body ", req.params.name);
+//   console.log("================================================");
+//   console.log("================================================");
+//   console.log("================================================");
 
-  const reg = {
-    name: req.params.name,
-    email: req.params.email,
-    mobile: req.params.mobile,
-  };
-  Register.findByIdAndUpdate(
-    req.params.id,
-    { $set: reg },
-    { new: true },
-    (err, data) => {
-      if (!err) {
-        res.status(200).json({
-          code: 200,
-          message: "Employee Updated Successfully",
-          updateEmployee: data,
-        });
-      } else {
-        console.log("error while update", err);
-      }
-    }
-  );
-});
+//   const reg = {
+//     name: req.params.name,
+//     email: req.params.email,
+//     mobile: req.params.mobile,
+//   };
+//   Register.findByIdAndUpdate(
+//     req.params.id,
+//     { $set: reg },
+//     { new: true },
+//     (err, data) => {
+//       if (!err) {
+//         res.status(200).json({
+//           code: 200,
+//           message: "Employee Updated Successfully",
+//           updateEmployee: data,
+//         });
+//       } else {
+//         console.log("error while update", err);
+//       }
+//     }
+//   );
+// });
 
 // Get Single user
 
