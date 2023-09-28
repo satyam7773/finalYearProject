@@ -11,6 +11,19 @@ const mailer = require("nodemailer");
 const { Register } = require("../models/register");
 const { form } = require("../models/form");
 
+let smtpProtocol = mailer.createTransport({
+  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: "smtptest477@gmail.com",
+    pass: "jzvayxlmdyecowsn",
+  },
+});
+
+
+
 // register user
 router.post("/api/register", (req, res) => {
   console.log("request =body ", req.body);
@@ -51,6 +64,111 @@ router.delete("/api/deleteUser/:id", (req, res) => {
   });
 });
 
+// Get Single user
+
+router.get("/api/user/:email/pass/:password", async (req, res) => {
+  console.log("================================================");
+  console.log("================================================");
+  console.log("================================================");
+  console.log("request =======body ", req.params.email);
+  console.log("================================================");
+  console.log("================================================");
+  console.log("================================================");
+
+  try {
+    const allData = await Register.findOne({
+      email: req.params.email,
+      password: req.params.password,
+    });
+    res.send(allData);
+  } catch (error) {
+    res.status(500).send({ error });
+  }
+});
+
+router.post("/api/login", async (req, res) => {
+  console.log("request", req.body);
+  try {
+    const allData = await Register.findOne(req.body);
+    console.log("allData", allData);
+    if (allData) {
+      res.send(allData);
+    } else {
+      res.send({ msg: "No Record Found !!!" });
+    }
+  } catch (error) {
+    res.status(500).send({ error });
+  }
+});
+
+router.post("/api/createNewHost", async (req, res) => {
+  const allData = new form(req.body);
+  console.log("allData", allData);
+
+
+  var mailoption = {
+    from: "smtptest477@gmail.com",
+    to: req.body.email,
+    subject: "Test Mail",
+    html: "This is sample mail please click on below link",
+  };
+
+  try {
+    await allData.save();
+    // res.send(allData);
+    smtpProtocol.sendMail(mailoption, function (err, response) {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      } else {
+        res.send(response);
+        console.log("Message Sent" + JSON.stringify(response));
+      }
+
+      smtpProtocol.close();
+    });
+  } catch (error) {
+    res.status(500).send({ error });
+  }
+});
+
+//get all user
+router.get("/api/users", async (req, res) => {
+  console.log("================================================");
+  try {
+    const allData = await Register.find({});
+    console.log("allData", allData);
+    if (allData) {
+      res.send(allData);
+    } else {
+      res.send({ msg: "No Record Found !!!" });
+    }
+  } catch (error) {
+    res.status(500).send({ error });
+  }
+});
+
+///////////////////////////////////////////////////////////////// smtp code
+
+// send email
+router.get("/api/sendEmail", (req, res) => {
+  console.log("request =body bookings ", req.body);
+
+  smtpProtocol.sendMail(mailoption, function (err, response) {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    } else {
+      res.send(response);
+      console.log("Message Sent" + JSON.stringify(response));
+    }
+
+    smtpProtocol.close();
+  });
+});
+
+///////////////////////////////////////////////////////////////// smtp code
+
 //update user details
 // router.post("/api/updateUser/:id/:name/:email/:mobile", (req, res) => {
 //   console.log("================================================");
@@ -83,110 +201,5 @@ router.delete("/api/deleteUser/:id", (req, res) => {
 //     }
 //   );
 // });
-
-// Get Single user
-
-router.get("/api/user/:email/pass/:password", async(req, res) => {
-  console.log("================================================");
-  console.log("================================================");
-  console.log("================================================");
-  console.log("request =======body ", req.params.email);
-  console.log("================================================");
-  console.log("================================================");
-  console.log("================================================");
-
-  try {
-    const allData = await Register.findOne(
-      { email: req.params.email, password: req.params.password });
-    res.send(allData);
-  } catch (error) {
-    res.status(500).send({ error });
-  }
-  
-});
-
-router.post("/api/login", async (req, res) => {
-  console.log('request',req.body)
-  try {
-    const allData = await Register.findOne(req.body);
-    console.log('allData',allData)
-    if(allData){
-      res.send(allData);
-    }else{
-      res.send({msg:'No Record Found !!!'})
-    }
-  } catch (error) {
-    res.status(500).send({ error });
-  }
-});
-
-router.post("/api/createNewHost", async (req, res) => {
-  // const login = new Register.find(request.body);
-  const allData = new form(req.body);
-  console.log('allData',allData)
-
-  try {
-    await allData.save()
-      res.send(allData);
-  } catch (error) {
-    res.status(500).send({ error });
-  }
-});
-
-
-
-//get all user
-router.get("/api/users", async (req, res) => {
-  console.log("================================================");
-  try {
-    const allData = await Register.find({});
-    console.log('allData',allData)
-    if(allData){
-      res.send(allData);
-    }else{
-      res.send({msg:'No Record Found !!!'})
-    }
-  } catch (error) {
-    res.status(500).send({ error });
-  }
-});
-
-///////////////////////////////////////////////////////////////// smtp code
-var smtpProtocol = mailer.createTransport({
-  service: "gmail",
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: "smtptest477@gmail.com",
-    pass: "jzvayxlmdyecowsn",
-  },
-});
-
-var mailoption = {
-  from: "smtptest477@gmail.com",
-  to: "satyamchoudhary477@gmail.com",
-  subject: "Test Mail",
-  html: "Good Morning!",
-};
-
-// send email
-router.get("/api/sendEmail", (req, res) => {
-  console.log("request =body bookings ", req.body);
-
-  smtpProtocol.sendMail(mailoption, function (err, response) {
-    if (err) {
-      console.log(err);
-      res.send(err);
-    } else {
-      res.send(response);
-      console.log("Message Sent" + JSON.stringify(response));
-    }
-
-    smtpProtocol.close();
-  });
-});
-
-///////////////////////////////////////////////////////////////// smtp code
 
 module.exports = router;
