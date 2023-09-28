@@ -6,15 +6,15 @@ var formSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   mobileNo: { type: String, required: true, unique: true },
   designation: { type: String, required: true },
-  bankAccountNo: { type: String },
-  confirmBankAccountNo: { type: String },
-  ifscCode: { type: String },
-  bankName: { type: String },
+  bankAccountNo: { type: String, required: true },
+  confirmBankAccountNo: { type: String, required: true },
+  ifscCode: { type: String, required: true },
+  bankName: { type: String, required: true },
 });
 
-var form = mongoose.model("form", formSchema);
+var verifiedForm = mongoose.model("verifiedForms", formSchema);
 
-module.exports = { form };
+module.exports = { verifiedForm };
 
 
 

@@ -10,6 +10,7 @@ const mailer = require("nodemailer");
 
 const { Register } = require("../models/register");
 const { form } = require("../models/form");
+const { verifiedForm } = require("../models/verifiedForm");
 
 let smtpProtocol = mailer.createTransport({
   service: "gmail",
@@ -21,8 +22,6 @@ let smtpProtocol = mailer.createTransport({
     pass: "jzvayxlmdyecowsn",
   },
 });
-
-
 
 // register user
 router.post("/api/register", (req, res) => {
@@ -104,18 +103,17 @@ router.post("/api/login", async (req, res) => {
 router.post("/api/createNewHost", async (req, res) => {
   const allData = new form(req.body);
   console.log("allData", allData);
-
-
-  var mailoption = {
-    from: "smtptest477@gmail.com",
-    to: req.body.email,
-    subject: "Test Mail",
-    html: "This is sample mail please click on below link",
-  };
-
   try {
     await allData.save();
-    // res.send(allData);
+
+    var mailoption = {
+      from: "smtptest477@gmail.com",
+      to: req.body.email,
+      subject: "Test Mail",
+      html:
+        "https://elegant-donut-d62aeb.netlify.app/login?token=" + allData._id,
+    };
+
     smtpProtocol.sendMail(mailoption, function (err, response) {
       if (err) {
         console.log(err);
@@ -127,6 +125,35 @@ router.post("/api/createNewHost", async (req, res) => {
 
       smtpProtocol.close();
     });
+  } catch (error) {
+    res.status(500).send({ error });
+  }
+});
+
+router.get("/api/verifyToken/:id", async (req, res) => {
+  console.log(
+    "================================================",
+    req.params.id
+  );
+  try {
+    const allData = await form.find({ _id: req.params.id });
+    console.log("allData", allData);
+    if (allData) {
+      res.send(allData);
+    } else {
+      res.send({ msg: "No Data" });
+    }
+  } catch (error) {
+    res.status(500).send({ error });
+  }
+});
+
+router.post("/api/verifyForm", async (req, res) => {
+  const allData = new verifiedForm(req.body);
+  console.log("allData", allData);
+  try {
+    await allData.save();
+    res.send(allData);
   } catch (error) {
     res.status(500).send({ error });
   }
