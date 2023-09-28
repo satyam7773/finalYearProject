@@ -9,6 +9,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 const mailer = require("nodemailer");
 
 const { Register } = require("../models/register");
+const { form } = require("../models/form");
 
 // register user
 router.post("/api/register", (req, res) => {
@@ -105,7 +106,6 @@ router.get("/api/user/:email/pass/:password", async(req, res) => {
 });
 
 router.post("/api/login", async (req, res) => {
-  // const login = new Register.find(request.body);
   console.log('request',req.body)
   try {
     const allData = await Register.findOne(req.body);
@@ -119,6 +119,20 @@ router.post("/api/login", async (req, res) => {
     res.status(500).send({ error });
   }
 });
+
+router.post("/api/createNewHost", async (req, res) => {
+  // const login = new Register.find(request.body);
+  const allData = new form(req.body);
+  console.log('allData',allData)
+
+  try {
+    await allData.save()
+      res.send(allData);
+  } catch (error) {
+    res.status(500).send({ error });
+  }
+});
+
 
 
 //get all user
