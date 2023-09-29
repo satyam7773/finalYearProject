@@ -111,7 +111,7 @@ router.post("/api/createNewHost", async (req, res) => {
       to: req.body.email,
       subject: "Test Mail",
       html:
-        "https://elegant-donut-d62aeb.netlify.app/login?token=" + allData._id,
+        "https://elegant-donut-d62aeb.netlify.app/#/login?token=" + allData._id,
     };
 
     smtpProtocol.sendMail(mailoption, function (err, response) {
