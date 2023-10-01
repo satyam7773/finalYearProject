@@ -100,6 +100,22 @@ router.post("/api/login", async (req, res) => {
   }
 });
 
+router.post("/api/getAllHostList", async (req, res) => {
+  console.log("request", req.body);
+  try {
+    const allData = await verifiedForm.find({});
+    console.log("allData", allData);
+    if (allData) {
+      res.send(allData);
+    } else {
+      res.send({ msg: "No Record Found !!!" });
+    }
+  } catch (error) {
+    res.status(500).send({ error });
+  }
+});
+
+
 router.post("/api/createNewHost", async (req, res) => {
   const allData = new form(req.body);
   console.log("allData", allData);
@@ -110,10 +126,12 @@ router.post("/api/createNewHost", async (req, res) => {
     var mailoption = {
       from: "smtptest477@gmail.com",
       to: req.body.email,
-      subject: "Test Mail",
-      html: `<div style="text-align: center;">
+      subject: "Welcome to Greenie Energy Network",
+      html: `
        <img src="https://www.greenie-energy.com/img/logo.png" alt="" width="200px">
-       <h2> Welcome hey </h2>
+       <h2> Hi , ${allData.nameOfPerson} </h2>
+       <p>We welcome ${allData.nameOfSociety} to Greenie Energy's expanding network of hosts for EV charging.
+       Please click on the 'Verify' button below to complete your registration.</p>
        <button style="padding: 10px;
        width:90px;
        margin-top:20px;
@@ -121,8 +139,11 @@ router.post("/api/createNewHost", async (req, res) => {
        border-radius: 10px;
        color: white;"> <a style="text-decoration:none;color:white" 
        href="https://elegant-donut-d62aeb.netlify.app/#/login?token=${allData._id.toString()}">Verify</a></button>
+       <p>Thanks,</p>
+       <p>Greenie Energy</p>
+
        <p style="text-align: end;">© 2023 GreenieEnergy Pvt Ltd, Inc.</p>
-      </div>`,
+      `,
     };
 
     smtpProtocol.sendMail(mailoption, function (err, response) {
@@ -195,7 +216,7 @@ router.get("/api/sendEmail", (req, res) => {
   var mailoption = {
     from: "smtptest477@gmail.com",
     to: "satyamchoudhary477@gmail.com",
-    subject: "Test Mail",
+    subject: "Welcome to Greenie Energy Network",
     html: `<div style="text-align: center;">
      <img src="https://www.greenie-energy.com/img/logo.png" alt="" width="200px">
      <h2> Welcome hey </h2>
