@@ -1,16 +1,40 @@
 const express = require("express");
 const router = express.Router();
-const ObjectId = require("mongoose").Types.ObjectId;
-
 const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
 const mailer = require("nodemailer");
 
-const { Register } = require("../models/register");
-const { form } = require("../models/form");
-const { verifiedForm } = require("../models/verifiedForm");
+const { Register } = require("../models/register"); // Register Collection
+const { form } = require("../models/form"); // Created host collection
+const { verifiedForm } = require("../models/verifiedForm"); // Verified Host Collection
+
+
+//Checking the crypto module
+const crypto = require('crypto');
+const algorithm = 'aes-256-cbc'; //Using AES encryption
+const key = crypto.randomBytes(32);
+const iv = crypto.randomBytes(16);
+
+
+//Encrypting text
+function encrypt(text) {
+  let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
+  let encrypted = cipher.update(text);
+  encrypted = Buffer.concat([encrypted, cipher.final()]);
+  return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') };
+}
+
+// Decrypting text
+function decrypt(text) {
+  let iv = Buffer.from(text.iv, 'hex');
+  let encryptedText = Buffer.from(text.encryptedData, 'hex');
+  let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
+  let decrypted = decipher.update(encryptedText);
+  decrypted = Buffer.concat([decrypted, decipher.final()]);
+  return decrypted.toString();
+}
 
 let smtpProtocol = mailer.createTransport({
   service: "gmail",
@@ -49,41 +73,6 @@ router.post("/api/register", (req, res) => {
   });
 });
 
-//delete user
-router.delete("/api/deleteUser/:id", (req, res) => {
-  Register.findByIdAndRemove(req.params.id, (err, data) => {
-    if (!err) {
-      // res.send(data);
-      res
-        .status(200)
-        .json({ code: 200, message: "User deleted", deleteUser: data });
-    } else {
-      console.log(err);
-    }
-  });
-});
-
-// Get Single user
-
-router.get("/api/user/:email/pass/:password", async (req, res) => {
-  console.log("================================================");
-  console.log("================================================");
-  console.log("================================================");
-  console.log("request =======body ", req.params.email);
-  console.log("================================================");
-  console.log("================================================");
-  console.log("================================================");
-
-  try {
-    const allData = await Register.findOne({
-      email: req.params.email,
-      password: req.params.password,
-    });
-    res.send(allData);
-  } catch (error) {
-    res.status(500).send({ error });
-  }
-});
 
 router.post("/api/login", async (req, res) => {
   console.log("request", req.body);
@@ -138,7 +127,7 @@ router.post("/api/createNewHost", async (req, res) => {
        background: #45b435;
        border-radius: 10px;
        color: white;"> <a style="text-decoration:none;color:white" 
-       href="https://elegant-donut-d62aeb.netlify.app/#/login?token=${allData._id.toString()}">Verify</a></button>
+       href="https://elegant-donut-d62aeb.netlify.app/#/create-host?token=${allData._id.toString()}">Verify</a></button>
        <p>Thanks,</p>
        <p>Greenie Energy</p>
 
@@ -277,5 +266,41 @@ router.get("/api/sendEmail", (req, res) => {
 //     }
 //   );
 // });
+
+//delete user
+// router.delete("/api/deleteUser/:id", (req, res) => {
+//   Register.findByIdAndRemove(req.params.id, (err, data) => {
+//     if (!err) {
+//       // res.send(data);
+//       res
+//         .status(200)
+//         .json({ code: 200, message: "User deleted", deleteUser: data });
+//     } else {
+//       console.log(err);
+//     }
+//   });
+// });
+
+// // Get Single user
+// router.get("/api/user/:email/pass/:password", async (req, res) => {
+//   console.log("================================================");
+//   console.log("================================================");
+//   console.log("================================================");
+//   console.log("request =======body ", req.params.email);
+//   console.log("================================================");
+//   console.log("================================================");
+//   console.log("================================================");
+
+//   try {
+//     const allData = await Register.findOne({
+//       email: req.params.email,
+//       password: req.params.password,
+//     });
+//     res.send(allData);
+//   } catch (error) {
+//     res.status(500).send({ error });
+//   }
+// });
+
 
 module.exports = router;
