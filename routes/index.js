@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const bodyParser = require("body-parser");
-router.use(bodyParser.json());
+router.use(bodyParser.text());
 router.use(bodyParser.urlencoded({ extended: true }));
 
 const mailer = require("nodemailer");
@@ -10,30 +10,20 @@ const { Register } = require("../models/register"); // Register Collection
 const { form } = require("../models/form"); // Created host collection
 const { verifiedForm } = require("../models/verifiedForm"); // Verified Host Collection
 
+const CryptoJS = require("crypto-js");
 
-//Checking the crypto module
-const crypto = require('crypto');
-const algorithm = 'aes-256-cbc'; //Using AES encryption
-const key = crypto.randomBytes(32);
-const iv = crypto.randomBytes(16);
-
+const cryptoPassword = "myPassword"; //change the password
 
 //Encrypting text
 function encrypt(text) {
-  let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
+  let cipher = crypto.createCipheriv("aes-256-cbc", Buffer.from(key), iv);
   let encrypted = cipher.update(text);
   encrypted = Buffer.concat([encrypted, cipher.final()]);
-  return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') };
+  return { iv: iv.toString("hex"), encryptedData: encrypted.toString("hex") };
 }
 
-// Decrypting text
-function decrypt(text) {
-  let iv = Buffer.from(text.iv, 'hex');
-  let encryptedText = Buffer.from(text.encryptedData, 'hex');
-  let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
-  let decrypted = decipher.update(encryptedText);
-  decrypted = Buffer.concat([decrypted, decipher.final()]);
-  return decrypted.toString();
+function decryptResponse(data) {
+  return CryptoJS.AES.decrypt(data, cryptoPassword).toString(CryptoJS.enc.Utf8);
 }
 
 let smtpProtocol = mailer.createTransport({
@@ -73,14 +63,14 @@ router.post("/api/register", (req, res) => {
   });
 });
 
-
 router.post("/api/login", async (req, res) => {
-  console.log("request", req.body);
+  let request = JSON.parse(decryptResponse(req.body));
   try {
-    const allData = await Register.findOne(req.body);
-    console.log("allData", allData);
+    const allData = await Register.findOne(request);
     if (allData) {
-      res.send(allData);
+      res.json(
+        CryptoJS.AES.encrypt(JSON.stringify(allData), cryptoPassword).toString()
+      );
     } else {
       res.send({ msg: "No Record Found !!!" });
     }
@@ -90,12 +80,14 @@ router.post("/api/login", async (req, res) => {
 });
 
 router.post("/api/getAllHostList", async (req, res) => {
-  console.log("request", req.body);
+  console.log("req==============", req.body);
   try {
     const allData = await verifiedForm.find({});
     console.log("allData", allData);
     if (allData) {
-      res.send(allData);
+      res.json(
+        CryptoJS.AES.encrypt(JSON.stringify(allData), cryptoPassword).toString()
+      );
     } else {
       res.send({ msg: "No Record Found !!!" });
     }
@@ -104,22 +96,24 @@ router.post("/api/getAllHostList", async (req, res) => {
   }
 });
 
-
 router.post("/api/createNewHost", async (req, res) => {
-  const allData = new form(req.body);
+  let request = JSON.parse(decryptResponse(req.body));
+
+  const allData = new form(request);
   console.log("allData", allData);
-  console.log("allData id", allData._id.toString());
   try {
     await allData.save();
 
     var mailoption = {
       from: "smtptest477@gmail.com",
-      to: req.body.email,
+      to: allData.email,
       subject: "Welcome to Greenie Energy Network",
       html: `
        <img src="https://www.greenie-energy.com/img/logo.png" alt="" width="200px">
        <h2> Hi , ${allData.nameOfPerson} </h2>
-       <p>We welcome ${allData.nameOfSociety} to Greenie Energy's expanding network of hosts for EV charging.
+       <p>We welcome ${
+         allData.nameOfSociety
+       } to Greenie Energy's expanding network of hosts for EV charging.
        Please click on the 'Verify' button below to complete your registration.</p>
        <button style="padding: 10px;
        width:90px;
@@ -140,8 +134,12 @@ router.post("/api/createNewHost", async (req, res) => {
         console.log(err);
         res.send(err);
       } else {
-        res.send(response);
-        console.log("Message Sent" + JSON.stringify(response));
+
+        res.json(
+          CryptoJS.AES.encrypt(JSON.stringify(response), cryptoPassword).toString()
+        );
+
+        // res.send(response);
       }
 
       smtpProtocol.close();
@@ -159,22 +157,39 @@ router.get("/api/verifyToken/:id", async (req, res) => {
   try {
     const allData = await form.find({ _id: req.params.id });
     console.log("allData", allData);
+
     if (allData) {
-      res.send(allData);
+      res.json(
+        CryptoJS.AES.encrypt(JSON.stringify(allData), cryptoPassword).toString()
+      );
     } else {
       res.send({ msg: "No Data" });
     }
+
   } catch (error) {
     res.status(500).send({ error });
   }
 });
 
 router.post("/api/verifyForm", async (req, res) => {
-  const allData = new verifiedForm(req.body);
+
+
+
+  let request = JSON.parse(decryptResponse(req.body));
+
+
+  const allData = new verifiedForm(request);
   console.log("allData", allData);
   try {
     await allData.save();
-    res.send(allData);
+    // res.send(allData);
+
+      res.json(
+        CryptoJS.AES.encrypt(JSON.stringify(allData), cryptoPassword).toString()
+      );
+    
+
+
   } catch (error) {
     res.status(500).send({ error });
   }
@@ -301,6 +316,5 @@ router.get("/api/sendEmail", (req, res) => {
 //     res.status(500).send({ error });
 //   }
 // });
-
 
 module.exports = router;
