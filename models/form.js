@@ -7,6 +7,7 @@ var formSchema = new mongoose.Schema({
   mobileNo: { type: String, required: true, unique: true },
   designation: { type: String, required: true },
   bankAccountNo: { type: String },
+  chargerNumber: { type: String, required: true },
   confirmBankAccountNo: { type: String },
   ifscCode: { type: String },
   bankName: { type: String },
@@ -15,6 +16,3 @@ var formSchema = new mongoose.Schema({
 var form = mongoose.model("form", formSchema);
 
 module.exports = { form };
-
-
-

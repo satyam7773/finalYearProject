@@ -14,14 +14,6 @@ const CryptoJS = require("crypto-js");
 
 const cryptoPassword = "myPassword"; //change the password
 
-//Encrypting text
-function encrypt(text) {
-  let cipher = crypto.createCipheriv("aes-256-cbc", Buffer.from(key), iv);
-  let encrypted = cipher.update(text);
-  encrypted = Buffer.concat([encrypted, cipher.final()]);
-  return { iv: iv.toString("hex"), encryptedData: encrypted.toString("hex") };
-}
-
 function decryptResponse(data) {
   return CryptoJS.AES.decrypt(data, cryptoPassword).toString(CryptoJS.enc.Utf8);
 }
@@ -32,35 +24,9 @@ let smtpProtocol = mailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: "smtptest477@gmail.com",
-    pass: "jzvayxlmdyecowsn",
+    user: "satyamchoudhary477@gmail.com",
+    pass: "rssp toew tbvu dijl",
   },
-});
-
-// register user
-router.post("/api/register", (req, res) => {
-  console.log("request =body ", req.body);
-  const reg = new Register({
-    name: req.body.name,
-    email: req.body.email,
-    mobile: req.body.mobile,
-    password: req.body.password,
-  });
-  reg.save((err, data) => {
-    if (!err) {
-      if (data) {
-        res.status(200).json({
-          code: 200,
-          message: "User Added Successfully",
-          addUser: data,
-        });
-      }
-      // res.send(data);
-    } else {
-      console.log(err);
-      res.send(err);
-    }
-  });
 });
 
 router.post("/api/login", async (req, res) => {
@@ -105,7 +71,7 @@ router.post("/api/createNewHost", async (req, res) => {
     await allData.save();
 
     var mailoption = {
-      from: "smtptest477@gmail.com",
+      from: "satyamchoudhary477@gmail.com",
       to: allData.email,
       subject: "Welcome to Greenie Energy Network",
       html: `
@@ -134,9 +100,11 @@ router.post("/api/createNewHost", async (req, res) => {
         console.log(err);
         res.send(err);
       } else {
-
         res.json(
-          CryptoJS.AES.encrypt(JSON.stringify(response), cryptoPassword).toString()
+          CryptoJS.AES.encrypt(
+            JSON.stringify(response),
+            cryptoPassword
+          ).toString()
         );
 
         // res.send(response);
@@ -165,18 +133,13 @@ router.get("/api/verifyToken/:id", async (req, res) => {
     } else {
       res.send({ msg: "No Data" });
     }
-
   } catch (error) {
     res.status(500).send({ error });
   }
 });
 
 router.post("/api/verifyForm", async (req, res) => {
-
-
-
   let request = JSON.parse(decryptResponse(req.body));
-
 
   const allData = new verifiedForm(request);
   console.log("allData", allData);
@@ -184,70 +147,88 @@ router.post("/api/verifyForm", async (req, res) => {
     await allData.save();
     // res.send(allData);
 
-      res.json(
-        CryptoJS.AES.encrypt(JSON.stringify(allData), cryptoPassword).toString()
-      );
-    
-
-
+    res.json(
+      CryptoJS.AES.encrypt(JSON.stringify(allData), cryptoPassword).toString()
+    );
   } catch (error) {
     res.status(500).send({ error });
   }
 });
+
+// register user
+// router.post("/api/register", (req, res) => {
+//   console.log("request =body ", req.body);
+//   const reg = new Register({
+//     name: req.body.name,
+//     email: req.body.email,
+//     mobile: req.body.mobile,
+//     password: req.body.password,
+//   });
+//   reg.save((err, data) => {
+//     if (!err) {
+//       if (data) {
+//         res.status(200).json({
+//           code: 200,
+//           message: "User Added Successfully",
+//           addUser: data,
+//         });
+//       }
+//     } else {
+//       console.log(err);
+//       res.send(err);
+//     }
+//   });
+// });
 
 //get all user
-router.get("/api/users", async (req, res) => {
-  console.log("================================================");
-  try {
-    const allData = await Register.find({});
-    console.log("allData", allData);
-    if (allData) {
-      res.send(allData);
-    } else {
-      res.send({ msg: "No Record Found !!!" });
-    }
-  } catch (error) {
-    res.status(500).send({ error });
-  }
-});
+// router.get("/api/users", async (req, res) => {
+//   console.log("================================================");
+//   try {
+//     const allData = await Register.find({});
+//     console.log("allData", allData);
+//     if (allData) {
+//       res.send(allData);
+//     } else {
+//       res.send({ msg: "No Record Found !!!" });
+//     }
+//   } catch (error) {
+//     res.status(500).send({ error });
+//   }
+// });
 
-///////////////////////////////////////////////////////////////// smtp code
+// send sample email via postman
+// router.get("/api/sendEmail", (req, res) => {
+//   console.log("request =body bookings ", req.body);
 
-// send email
-router.get("/api/sendEmail", (req, res) => {
-  console.log("request =body bookings ", req.body);
+//   var mailoption = {
+//     from: "smtptest477@gmail.com",
+//     to: "satyamchoudhary477@gmail.com",
+//     subject: "Welcome to Greenie Energy Network",
+//     html: `<div style="text-align: center;">
+//      <img src="https://www.greenie-energy.com/img/logo.png" alt="" width="200px">
+//      <h2> Welcome hey </h2>
+//      <button style="padding: 10px;
+//      width:90px;
+//      margin-top:20px;
+//      background: #45b435;
+//      border-radius: 10px;
+//      color: white;"> <a style="text-decoration:none;color:white" href="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg">Verify</a></button>
+//      <p style="text-align: end;">© 2023 GreenieEnergy Pvt Ltd, Inc.</p>
+//     </div>`,
+//   };
 
-  var mailoption = {
-    from: "smtptest477@gmail.com",
-    to: "satyamchoudhary477@gmail.com",
-    subject: "Welcome to Greenie Energy Network",
-    html: `<div style="text-align: center;">
-     <img src="https://www.greenie-energy.com/img/logo.png" alt="" width="200px">
-     <h2> Welcome hey </h2>
-     <button style="padding: 10px;
-     width:90px;
-     margin-top:20px;
-     background: #45b435;
-     border-radius: 10px;
-     color: white;"> <a style="text-decoration:none;color:white" href="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg">Verify</a></button>
-     <p style="text-align: end;">© 2023 GreenieEnergy Pvt Ltd, Inc.</p>
-    </div>`,
-  };
+//   smtpProtocol.sendMail(mailoption, function (err, response) {
+//     if (err) {
+//       console.log(err);
+//       res.send(err);
+//     } else {
+//       res.send(response);
+//       console.log("Message Sent" + JSON.stringify(response));
+//     }
 
-  smtpProtocol.sendMail(mailoption, function (err, response) {
-    if (err) {
-      console.log(err);
-      res.send(err);
-    } else {
-      res.send(response);
-      console.log("Message Sent" + JSON.stringify(response));
-    }
-
-    smtpProtocol.close();
-  });
-});
-
-///////////////////////////////////////////////////////////////// smtp code
+//     smtpProtocol.close();
+//   });
+// });
 
 //update user details
 // router.post("/api/updateUser/:id/:name/:email/:mobile", (req, res) => {
