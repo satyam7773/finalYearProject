@@ -150,7 +150,7 @@ router.post("/api/verifyForm", async (req, res) => {
     var mailoption = {
       from: "satyamchoudhary477@gmail.com",
       to: allData.email,
-      cc:'satyamchoudhary47@gmail.com,jatin.masurkar@icloud.com',
+      cc:'satyamchoudhary47@gmail.com,satyamchoudhary477@gmail.com',
       subject: "Thank you for Verifiying",
       html: `
        <img src="https://www.greenie-energy.com/img/logo.png" alt="" width="200px">
