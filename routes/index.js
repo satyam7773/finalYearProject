@@ -143,16 +143,58 @@ router.post("/api/verifyForm", async (req, res) => {
 
   const allData = new verifiedForm(request);
   console.log("allData", allData);
+
   try {
     await allData.save();
-    // res.send(allData);
 
-    res.json(
-      CryptoJS.AES.encrypt(JSON.stringify(allData), cryptoPassword).toString()
-    );
+    var mailoption = {
+      from: "satyamchoudhary477@gmail.com",
+      to: allData.email,
+      cc:'satyamchoudhary47@gmail.com,jatin.masurkar@icloud.com',
+      subject: "Thank you for Verifiying",
+      html: `
+       <img src="https://www.greenie-energy.com/img/logo.png" alt="" width="200px">
+       <h2> Hi , ${allData.nameOfPerson} </h2>
+       <p> Thank you for verifying your details and confirming your approval. Our installation team will be in touch with you shortly. </p>
+       
+       <p>Thanks,</p>
+       <p>Greenie Energy</p>
+
+       <p style="text-align: end;">© 2023 GreenieEnergy Pvt Ltd, Inc.</p>
+      `,
+    };
+
+    smtpProtocol.sendMail(mailoption, function (err, response) {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      } else {
+        res.json(
+          CryptoJS.AES.encrypt(
+            JSON.stringify(response),
+            cryptoPassword
+          ).toString()
+        );
+
+        // res.send(response);
+      }
+
+      smtpProtocol.close();
+    });
   } catch (error) {
     res.status(500).send({ error });
   }
+
+
+
+  // try {
+  //   await allData.save();
+  //   res.json(
+  //     CryptoJS.AES.encrypt(JSON.stringify(allData), cryptoPassword).toString()
+  //   );
+  // } catch (error) {
+  //   res.status(500).send({ error });
+  // }
 });
 
 // register user

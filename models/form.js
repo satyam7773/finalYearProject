@@ -7,7 +7,11 @@ var formSchema = new mongoose.Schema({
   mobileNo: { type: String, required: true, unique: true },
   designation: { type: String, required: true },
   bankAccountNo: { type: String },
+  deposit: { type: String, required: true },
   chargerNumber: { type: String, required: true },
+  charges: { type: String, required: true },
+  
+  
   confirmBankAccountNo: { type: String },
   ifscCode: { type: String },
   bankName: { type: String },
