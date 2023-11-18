@@ -74,25 +74,26 @@ router.post("/api/createNewHost", async (req, res) => {
       from: "satyamchoudhary477@gmail.com",
       to: allData.email,
       subject: "Welcome to Greenie Energy Network",
-      html: `
-       <img src="https://www.greenie-energy.com/img/logo.png" alt="" width="200px">
-       <h2> Hi , ${allData.nameOfPerson} </h2>
-       <p>We welcome ${
-         allData.nameOfSociety
-       } to Greenie Energy's expanding network of hosts for EV charging.
-       Please click on the 'Verify' button below to complete your registration.</p>
-       <button style="padding: 10px;
-       width:90px;
-       margin-top:20px;
-       background: #45b435;
-       border-radius: 10px;
-       color: white;"> <a style="text-decoration:none;color:white" 
-       href="https://elegant-donut-d62aeb.netlify.app/#/create-host?token=${allData._id.toString()}">Verify</a></button>
-       <p>Thanks,</p>
-       <p>Greenie Energy</p>
+      // html: 
+      // `
+      //  <img src="https://www.greenie-energy.com/img/logo.png" alt="" width="200px">
+      //  <h2> Hi , ${allData.nameOfPerson} </h2>
+      //  <p>We welcome ${
+      //    allData.nameOfSociety
+      //  } to Greenie Energy's expanding network of hosts for EV charging.
+      //  Please click on the 'Verify' button below to complete your registration.</p>
+      //  <button style="padding: 10px;
+      //  width:90px;
+      //  margin-top:20px;
+      //  background: #45b435;
+      //  border-radius: 10px;
+      //  color: white;"> <a style="text-decoration:none;color:white" 
+      //  href="https://elegant-donut-d62aeb.netlify.app/#/create-host?token=${allData._id.toString()}">Verify</a></button>
+      //  <p>Thanks,</p>
+      //  <p>Greenie Energy</p>
 
-       <p style="text-align: end;">© 2023 GreenieEnergy Pvt Ltd, Inc.</p>
-      `,
+      //  <p style="text-align: end;">© 2023 GreenieEnergy Pvt Ltd, Inc.</p>
+      // `,
 
       html: `
       <img style="width:100%" src="http://cdn.mcauto-images-production.sendgrid.net/c31721ac5f4f8b45/ddab54ac-0b39-45b6-9a0b-c86e6039f88b/2918x1981.jpg" alt="">
