@@ -183,7 +183,7 @@ router.post("/api/verifyForm", async (req, res) => {
       html: `
       <img style="width:100%" src="http://cdn.mcauto-images-production.sendgrid.net/c31721ac5f4f8b45/ddab54ac-0b39-45b6-9a0b-c86e6039f88b/2918x1981.jpg" alt="">
       <h2> Hi , ${allData.nameOfPerson} </h2>
-      <div><h1 style="text-align: inherit; font-family: inherit"><span style="font-family: &quot;arial black&quot;, helvetica, sans-serif; font-size: 40px; color: #d89816"> Thank you for verifying your details and confirming your approval. Our installation team will be in touch with you shortly. </span></h1><div></div></div>
+      <div><h4 style="text-align: inherit; font-family: inherit"><span style="font-family: &quot;arial black&quot;, helvetica, sans-serif; font-size: 40px; color: #d89816"> Thank you for verifying your details and confirming your approval. Our installation team will be in touch with you shortly. </span></h4><div></div></div>
  
       <p>Thanks,</p>
       <p>Greenie Energy</p>
