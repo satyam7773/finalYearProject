@@ -150,7 +150,7 @@ router.post("/api/verifyForm", async (req, res) => {
     var mailoption = {
       from: "satyamchoudhary477@gmail.com",
       to: allData.email,
-      cc:'satyamchoudhary47@gmail.com,satyamchoudhary477@gmail.com',
+      cc: "satyamchoudhary47@gmail.com,satyamchoudhary477@gmail.com",
       subject: "Thank you for Verifiying",
       html: `
        <img src="https://www.greenie-energy.com/img/logo.png" alt="" width="200px">
@@ -162,6 +162,27 @@ router.post("/api/verifyForm", async (req, res) => {
 
        <p style="text-align: end;">© 2023 GreenieEnergy Pvt Ltd, Inc.</p>
       `,
+
+
+      html: `
+      <img style="width:100%" src="http://cdn.mcauto-images-production.sendgrid.net/c31721ac5f4f8b45/ddab54ac-0b39-45b6-9a0b-c86e6039f88b/2918x1981.jpg" alt="">
+      <h2> Hi , , ${allData.nameOfPerson} </h2>
+      <div><h1 style="text-align: inherit; font-family: inherit"><span style="font-family: &quot;arial black&quot;, helvetica, sans-serif; font-size: 40px; color: #d89816">WELCOME TO Greenie Energy </span></h1><div></div></div>
+ 
+      <div><div style="font-family: inherit; text-align: inherit"><span style="font-family: &quot;times new roman&quot;, times, serif; font-size: 18px">We welcome etstign  to Greenie Energy's expanding network of hosts for EV charging.
+      Please click on the 'Verify' button below to complete your registration.</span></div><div></div></div>
+      
+ 
+      <a href="https://elegant-donut-d62aeb.netlify.app/#/create-host?${allData.token}" style="background-color:#ffffff;border:1px solid #939598;border-color:#939598;border-radius:0px;border-width:1px;color:#D89816;display:inline-block;font-size:15px;font-weight:normal;letter-spacing:1px;line-height:normal;padding:16px 20px 16px 20px;text-align:center;text-decoration:none;border-style:solid;font-family:times new roman,times,serif;margin-top:10px" target="_blank">Verify</a>
+ 
+ 
+      <p>Thanks,</p>
+      <p>Greenie Energy</p>
+      <div style="color: grey;"><div style="font-family: inherit; text-align: center"><span style="font-size: 10px"><strong>Greenie Energy Technologies Pvt. Ltd. (CIN: U74999MH2020PTC349283 / GST: 27AAICG6602R1Z1)</strong></span></div>
+ <div style="font-family: inherit; text-align: center"><span style="font-size: 10px"><strong>Corporate Address: HD-071, Wework Nesco IT Park, Building No-4, Goregaon-East, Mumbai-400063.</strong></span></div><div></div></div>
+ 
+      <p style="text-align: end;">© 2023 GreenieEnergy Pvt Ltd, Inc.</p>
+     `,
     };
 
     smtpProtocol.sendMail(mailoption, function (err, response) {
@@ -184,8 +205,6 @@ router.post("/api/verifyForm", async (req, res) => {
   } catch (error) {
     res.status(500).send({ error });
   }
-
-
 
   // try {
   //   await allData.save();
@@ -239,38 +258,45 @@ router.post("/api/verifyForm", async (req, res) => {
 // });
 
 // send sample email via postman
-// router.get("/api/sendEmail", (req, res) => {
-//   console.log("request =body bookings ", req.body);
+router.get("/api/sendEmail", (req, res) => {
+  console.log("request =body bookings ", req.body);
 
-//   var mailoption = {
-//     from: "smtptest477@gmail.com",
-//     to: "satyamchoudhary477@gmail.com",
-//     subject: "Welcome to Greenie Energy Network",
-//     html: `<div style="text-align: center;">
-//      <img src="https://www.greenie-energy.com/img/logo.png" alt="" width="200px">
-//      <h2> Welcome hey </h2>
-//      <button style="padding: 10px;
-//      width:90px;
-//      margin-top:20px;
-//      background: #45b435;
-//      border-radius: 10px;
-//      color: white;"> <a style="text-decoration:none;color:white" href="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg">Verify</a></button>
-//      <p style="text-align: end;">© 2023 GreenieEnergy Pvt Ltd, Inc.</p>
-//     </div>`,
-//   };
+  var mailoption = {
+    from: "satyamchoudhary477@gmail.com",
+    to: "satyamchoudhary477@gmail.com",
+    subject: "Welcome to Greenie Energy Network",
+    html: `
+     <img style="width:100%" src="http://cdn.mcauto-images-production.sendgrid.net/c31721ac5f4f8b45/ddab54ac-0b39-45b6-9a0b-c86e6039f88b/2918x1981.jpg" alt="">
+     <h2> Hi , Test </h2>
+     <div><h1 style="text-align: inherit; font-family: inherit"><span style="font-family: &quot;arial black&quot;, helvetica, sans-serif; font-size: 40px; color: #d89816">WELCOME TO Greenie Energy </span></h1><div></div></div>
 
-//   smtpProtocol.sendMail(mailoption, function (err, response) {
-//     if (err) {
-//       console.log(err);
-//       res.send(err);
-//     } else {
-//       res.send(response);
-//       console.log("Message Sent" + JSON.stringify(response));
-//     }
+     <div><div style="font-family: inherit; text-align: inherit"><span style="font-family: &quot;times new roman&quot;, times, serif; font-size: 18px">We welcome etstign  to Greenie Energy's expanding network of hosts for EV charging.
+     Please click on the 'Verify' button below to complete your registration.</span></div><div></div></div>
+     
 
-//     smtpProtocol.close();
-//   });
-// });
+     <a href="https://elegant-donut-d62aeb.netlify.app/#/create-host?token" style="background-color:#ffffff;border:1px solid #939598;border-color:#939598;border-radius:0px;border-width:1px;color:#D89816;display:inline-block;font-size:15px;font-weight:normal;letter-spacing:1px;line-height:normal;padding:16px 20px 16px 20px;text-align:center;text-decoration:none;border-style:solid;font-family:times new roman,times,serif;margin-top:10px" target="_blank">Verify</a>
+
+
+     <p>Thanks,</p>
+     <p>Greenie Energy</p>
+     <div style="color: grey;"><div style="font-family: inherit; text-align: center"><span style="font-size: 10px"><strong>Greenie Energy Technologies Pvt. Ltd. (CIN: U74999MH2020PTC349283 / GST: 27AAICG6602R1Z1)</strong></span></div>
+<div style="font-family: inherit; text-align: center"><span style="font-size: 10px"><strong>Corporate Address: HD-071, Wework Nesco IT Park, Building No-4, Goregaon-East, Mumbai-400063.</strong></span></div><div></div></div>
+
+     <p style="text-align: end;">© 2023 GreenieEnergy Pvt Ltd, Inc.</p>
+    `,
+  };
+
+  smtpProtocol.sendMail(mailoption, function (err, response) {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    } else {
+      res.send(response);
+    }
+
+    smtpProtocol.close();
+  });
+});
 
 //update user details
 // router.post("/api/updateUser/:id/:name/:email/:mobile", (req, res) => {

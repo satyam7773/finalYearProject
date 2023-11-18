@@ -15,6 +15,15 @@ var formSchema = new mongoose.Schema({
   confirmBankAccountNo: { type: String },
   ifscCode: { type: String },
   bankName: { type: String },
+
+
+
+
+  depositeInput: { type: String },
+  chargesMonthlyInput1: { type: String },
+  chargesMonthlyInput2: { type: String },
+  chargesServicesInput: { type: String },
+
 });
 
 var form = mongoose.model("form", formSchema);

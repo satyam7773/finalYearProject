@@ -14,6 +14,10 @@ var formSchema = new mongoose.Schema({
   confirmBankAccountNo: { type: String, required: true },
   ifscCode: { type: String, required: true },
   bankName: { type: String, required: true },
+  depositeInput: { type: String },
+  chargesMonthlyInput1: { type: String },
+  chargesMonthlyInput2: { type: String },
+  chargesServicesInput: { type: String },
 });
 
 var verifiedForm = mongoose.model("verifiedForms", formSchema);
