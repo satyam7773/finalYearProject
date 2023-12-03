@@ -24,6 +24,8 @@ var formSchema = new mongoose.Schema({
   chargesMonthlyInput2: { type: String },
   chargesServicesInput: { type: String },
 
+},{
+  timestamps:true
 });
 
 var form = mongoose.model("form", formSchema);

@@ -17,7 +17,10 @@ var formSchema = new mongoose.Schema({
   depositeInput: { type: String },
   chargesMonthlyInput1: { type: String },
   chargesMonthlyInput2: { type: String },
+  
   chargesServicesInput: { type: String },
+},{
+  timestamps:true
 });
 
 var verifiedForm = mongoose.model("verifiedForms", formSchema);
