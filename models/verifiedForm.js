@@ -16,6 +16,8 @@ var formSchema = new mongoose.Schema({
   bankName: { type: String, required: true },
   depositeInput: { type: String },
   chargesMonthlyInput1: { type: String },
+  address: { type: String, required: true },
+
   chargesMonthlyInput2: { type: String },
   
   chargesServicesInput: { type: String },

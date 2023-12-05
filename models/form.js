@@ -10,6 +10,7 @@ var formSchema = new mongoose.Schema({
   deposit: { type: String, required: true },
   chargerNumber: { type: String, required: true },
   charges: { type: String, required: true },
+  address: { type: String, required: true },
   
   
   confirmBankAccountNo: { type: String },
